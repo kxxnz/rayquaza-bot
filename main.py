@@ -1,18 +1,11 @@
-import os
+from app.bot import criar_bot
+from app.config import configuracoes
 
-import discord
-from discord.ext import commands
-from dotenv import load_dotenv
 
-load_dotenv()
+def main() -> None:
+    bot = criar_bot()
+    bot.run(configuracoes.bot_token)
+    
 
-token = os.getenv("BOT_TOKEN")
-
-intents = discord.Intents.all()
-bot = commands.Bot(command_prefix='.', intents=intents)
-
-@bot.event
-async def on_ready():
-    print(f'Logado como {bot.user.name} - {bot.user.id}')
-
-bot.run(token)
+if __name__ == "__main__":
+    main()
