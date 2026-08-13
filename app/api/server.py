@@ -4,6 +4,7 @@ from typing import Any
 import discord
 from aiohttp import web
 from discord.ext import commands
+from app.notifications.promocoes_de_voo import PromocaoDeVoo, criar_embed_promocao_de_voo
 
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,7 @@ class RayquazaAPI:
         
         app.router.add_get("/health", self.verificar_saude)
         app.router.add_post("/notificacoes/teste", self.enviar_noticacao_de_teste)
+        app.router.add_post("/notificacoes/promocoes-de-voo", self.enviar_promocao_de_voo)
         
         self.runner = web.AppRunner(app)
         await self.runner.setup()
@@ -80,6 +82,46 @@ class RayquazaAPI:
         logger.info("notificacao enviada com sucesso | canal_id=%s", self.notification_channel_id)
         
         return web.json_response({"status": "notificacao enviada com sucesso.", "canal_id": self.notification_channel_id})
+    
+    async def enviar_promocao_de_voo(self, request: web.Request) -> web.Response:
+        try:
+            dados = await request.json()
+            
+            promocao = PromocaoDeVoo(
+                origem=dados["origem"],
+                destino=dados["destino"],
+                preco=float(dados["preco"]),
+                moeda=dados["moeda"],
+                companhia=dados["companhia"],
+                numero_voo=dados["numero_voo"],
+                quantidade_escalas=int(dados["quantidade_escalas"]),
+                duracao_minutos=int(dados["duracao_minutos"]),
+                horario_chegada=dados["horario_chegada"],
+                horario_saida=dados["horario_saida"],
+                link=dados["link"],
+            )
+        except (KeyError, TypeError, ValueError):
+            return web.json_response({"erro": "os dados de promocao de voo sao invalidos ou estao incompletos"}, status = 400)
+        
+        canal = await self.obter_canal()
+        
+        if canal is None or not hasattr(canal, "send"):
+            logger.error("o canal de notificacoes nao eh valido | canal_id %s", self.notification_channel_id)
+            
+            return web.json_response({"erro": "o canal configurado nao aceita mensagens"}, status = 500)
+        
+        embed = criar_embed_promocao_de_voo(promocao)
+        
+        try:
+            await canal.send(embed=embed)
+        except discord.DiscordException:
+            logger.exception("erro ao enviar promocao de voo | canal_id=%s", self.notification_channel_id)
+            
+            return web.json_response({"erro": "nao foi possivel enviar a promocao ao discord"}, status = 500)
+        
+        logger.info("promocao de voo enviada com sucesso | rota=%s-%s | preco=%.2f | canal_id=%s", promocao.origem, promocao.destino, promocao.preco, self.notification_channel_id)
+        
+        return web.json_response({"status": "promocao de voo enviada com sucesso.", "canal_id": self.notification_channel_id})
     
     def obter_mensagem(self, dados: dict[str, Any]) -> str | None:
         if not isinstance(dados, dict):
