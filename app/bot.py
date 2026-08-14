@@ -20,6 +20,7 @@ class RayquazaBot(commands.Bot):
         # carregar as extensões do bot
         await self.load_extension("app.commands.general")
         await self.load_extension("app.events.ready")
+        await self.load_extension("app.events.membros")
         
         # inicia o servidor da api
         await self.servidor_api.start()

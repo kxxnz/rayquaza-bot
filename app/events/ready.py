@@ -62,6 +62,9 @@ ID: {self.bot.user.id}
     async def on_command_error(self, contexto: commands.Context,erro: commands.CommandError,) -> None:
         if isinstance(erro, commands.CommandNotFound):
             logger.warning("Comando inexistente | usuario=%s | mensagem=%s", contexto.author,contexto.message.content,)
+            
+            await contexto.reply("Esse comando não existe.")
+            
             return
 
         comando = (contexto.command.qualified_name if contexto.command else "desconhecido")
