@@ -1,0 +1,45 @@
+services:
+  rayquaza-bot:
+    image: jpwrlld/rayquaza-bot:${IMAGE_TAG:-latest}
+    container_name: rayquaza-bot
+    platform: linux/386
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      API_HOST: 0.0.0.0
+      API_PORT: 8080
+    ports:
+      - "3000:8080"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=5)"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - rayquaza-network
+
+  monitoramento-de-voos:
+    image: jpwrlld/rayquaza-bot:${IMAGE_TAG:-latest}
+    container_name: monitoramento-de-voos
+    platform: linux/386
+    restart: unless-stopped
+    command: python -m services.monitoramento_de_voos.main
+    env_file:
+      - .env
+    environment:
+      RAYQUAZA_API_URL: http://rayquaza-bot:8080
+    depends_on:
+      rayquaza-bot:
+        condition: service_healthy
+    networks:
+      - rayquaza-network
+
+networks:
+  rayquaza-network:
+    name: rayquaza-network
