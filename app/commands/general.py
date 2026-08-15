@@ -23,8 +23,16 @@ class ComandosGerais(commands.Cog):
         await contexto.send(embed=embed)
         
     @commands.command(name="pfp")
-    async def pfp (self, contexto: commands.Context, membro: discord.Member | None = None) -> None:
-        usuario = membro or contexto.author
+    async def pfp(self, contexto: commands.Context, usuario_informado: str | None = None) -> None:
+        usuario = contexto.author
+        
+        if usuario_informado:
+            usuario = await self.buscar_usuario(contexto, usuario_informado)
+        
+            if usuario is None:
+                await contexto.reply("Não foi possível encontrar esse usuário.", mention_author=False,)
+                return
+        
         avatar = usuario.display_avatar.replace(size=1024)
         
         embed = discord.Embed(title=f"Foto de perfil de {usuario.display_name}", color=discord.Color.green())
@@ -41,6 +49,23 @@ class ComandosGerais(commands.Cog):
         await contexto.reply(embed=embed,
                              view=view,
                              mention_author=False)
+
+
+    async def buscar_usuario(self, contexto: commands.Context, valor: str) -> discord.User | discord.Member | None:
+        try:
+            return await commands.MemberConverter().convert(contexto, valor)
+        except commands.MemberNotFound:
+            pass
+
+        usuario_id = valor.replace("<@", "").replace("!", "").replace(">", "")
+
+        if not usuario_id.isdigit():
+            return None
+
+        try:
+            return await self.bot.fetch_user(int(usuario_id))
+        except (discord.NotFound, discord.HTTPException):
+            return None
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(ComandosGerais(bot))
