@@ -12,6 +12,8 @@ class Configuracoes:
     api_host: str
     api_port: int
     notification_channel_id: int
+    ticket_panel_channel_id: int
+    ticket_category_id: int
     
 
 def carregar_as_configuracoes() -> Configuracoes:
@@ -19,6 +21,8 @@ def carregar_as_configuracoes() -> Configuracoes:
     api_host = os.getenv("API_HOST")
     api_port = int(os.getenv("API_PORT"))
     notification_channel_id = int(os.getenv("CANAL_DE_PROMOCOES_DE_VOO"))
+    ticket_panel_channel_id = int(os.getenv("TICKET_PANEL_CHANNEL_ID"))
+    ticket_category_id = int(os.getenv("TICKET_CATEGORY_ID"))
 
     if not bot_token:
         raise ValueError("O token do bot nao foi configurado/encontrado.")
@@ -28,14 +32,18 @@ def carregar_as_configuracoes() -> Configuracoes:
         raise ValueError("A porta da API nao foi configurada/encontrada.")
     if not notification_channel_id:
         raise ValueError("O ID do canal de notificacoes nao foi configurado/encontrado.")
+    if not ticket_panel_channel_id:
+        raise ValueError("O ID do canal de ticket nao foi configurado/encontrado.")
+    if not ticket_category_id:
+        raise ValueError("O ID da categoria de ticket nao foi configurado/encontrado.")
 
-    return Configuracoes(
-        bot_token=bot_token,
-        command_prefix='.',
-        api_host=api_host,
-        api_port=api_port,
-        notification_channel_id=notification_channel_id
-    )
-    
+    return Configuracoes(bot_token=bot_token,
+                         command_prefix='.',
+                         api_host=api_host,
+                         api_port=api_port,
+                         notification_channel_id=notification_channel_id,
+                         ticket_category_id=ticket_category_id,
+                         ticket_panel_channel_id=ticket_panel_channel_id)
+
 
 configuracoes = carregar_as_configuracoes()

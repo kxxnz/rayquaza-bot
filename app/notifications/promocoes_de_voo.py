@@ -31,19 +31,12 @@ def criar_embed_promocao_de_voo(promocao: PromocaoDeVoo,) -> discord.Embed:
     )
 
     embed.add_field(name="Companhia", value=promocao.companhia, inline=True,)
-
     embed.add_field(name="Voo", value=promocao.numero_voo, inline=True,)
-
     embed.add_field(name="Escalas",value=formatar_escalas(promocao.quantidade_escalas),inline=True,)
-
     embed.add_field(name="Saída",value=formatar_data_hora(promocao.horario_saida),inline=True,)
-
     embed.add_field(name="Chegada",value=formatar_data_hora(promocao.horario_chegada),inline=True,)
-
     embed.add_field(name="Duração",value=formatar_duracao(promocao.duracao_minutos),inline=True,)
-    
     embed.add_field(name="Comprar passagem", value=f"{promocao.link}", inline=False)
-
     embed.set_footer(text=("O preço pode mudar. ""Confirme a tarifa antes da compra."))
 
     return embed
