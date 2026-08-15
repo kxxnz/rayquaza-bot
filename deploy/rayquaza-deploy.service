@@ -1,0 +1,13 @@
+[Unit]
+Description=Atualiza os containers do Rayquaza
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=joao
+Group=docker
+WorkingDirectory=/opt/rayquaza-bot
+ExecStart=/opt/rayquaza-bot/deploy.sh
+TimeoutStartSec=10min

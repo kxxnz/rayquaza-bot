@@ -1,0 +1,11 @@
+[Unit]
+Description=Verifica atualizacoes do Rayquaza
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Persistent=true
+Unit=rayquaza-deploy.service
+
+[Install]
+WantedBy=timers.target
