@@ -3,6 +3,7 @@ from discord.ext import commands
 
 from app.config import configuracoes
 from app.api.server import RayquazaAPI
+from app.tickets.painel import PainelTickets
 
 
 class RayquazaBot(commands.Bot):
@@ -17,8 +18,11 @@ class RayquazaBot(commands.Bot):
     async def setup_hook(self) -> None:
         # carregar as extensões do bot
         await self.load_extension("app.commands.general")
+        await self.load_extension("app.commands.tickets")
         await self.load_extension("app.events.ready")
         await self.load_extension("app.events.membros")
+        
+        self.add_view(PainelTickets())
         
         # inicia o servidor da api
         await self.servidor_api.start()
