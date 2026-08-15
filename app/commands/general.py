@@ -22,5 +22,25 @@ class ComandosGerais(commands.Cog):
         
         await contexto.send(embed=embed)
         
+    @commands.command(name="pfp")
+    async def pfp (self, contexto: commands.Context, membro: discord.Member | None = None) -> None:
+        usuario = membro or contexto.author
+        avatar = usuario.display_avatar.replace(size=1024)
+        
+        embed = discord.Embed(title=f"Foto de perfil de {usuario.display_name}", color=discord.Color.green())
+        
+        embed.set_image(url=avatar.url)
+        
+        view = discord.ui.View()
+        
+        view.add_item(discord.ui.Button(label="Abrir ou baixar imagem",
+                                        style=discord.ButtonStyle.link,
+                                        url=avatar.url,
+                                        emoji="📥"))
+
+        await contexto.reply(embed=embed,
+                             view=view,
+                             mention_author=False)
+
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(ComandosGerais(bot))

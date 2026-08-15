@@ -87,19 +87,17 @@ class RayquazaAPI:
         try:
             dados = await request.json()
             
-            promocao = PromocaoDeVoo(
-                origem=dados["origem"],
-                destino=dados["destino"],
-                preco=float(dados["preco"]),
-                moeda=dados["moeda"],
-                companhia=dados["companhia"],
-                numero_voo=dados["numero_voo"],
-                quantidade_escalas=int(dados["quantidade_escalas"]),
-                duracao_minutos=int(dados["duracao_minutos"]),
-                horario_chegada=dados["horario_chegada"],
-                horario_saida=dados["horario_saida"],
-                link=dados["link"],
-            )
+            promocao = PromocaoDeVoo(origem=dados["origem"],
+                                     destino=dados["destino"],
+                                     preco=float(dados["preco"]),
+                                     moeda=dados["moeda"],
+                                     companhia=dados["companhia"],
+                                     numero_voo=dados["numero_voo"],
+                                     quantidade_escalas=int(dados["quantidade_escalas"]),
+                                     duracao_minutos=int(dados["duracao_minutos"]),
+                                     horario_chegada=dados["horario_chegada"],
+                                     horario_saida=dados["horario_saida"],
+                                     link=dados["link"])
         except (KeyError, TypeError, ValueError):
             return web.json_response({"erro": "os dados de promocao de voo sao invalidos ou estao incompletos"}, status = 400)
         

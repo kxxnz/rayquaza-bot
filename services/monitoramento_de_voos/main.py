@@ -9,11 +9,9 @@ from services.monitoramento_de_voos.scheduler import FlightMonitorWorker
 
 
 def configurar_logs() -> None:
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
+    logging.basicConfig(level=logging.INFO,
+                        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+                        datefmt="%Y-%m-%d %H:%M:%S")
 
 
 async def executar() -> None:
@@ -30,16 +28,12 @@ Iniciando monitoramento de voos
     cliente = ClienteSerpApi(configuracoes)
     notificador = NotificadorRayquaza(configuracoes)
 
-    monitoramento = MonitoramentoDeVoos(
-        configuracoes=configuracoes,
-        cliente=cliente,
-        notificador=notificador,
-    )
+    monitoramento = MonitoramentoDeVoos(configuracoes=configuracoes,
+                                        cliente=cliente,
+                                        notificador=notificador)
 
-    worker = FlightMonitorWorker(
-        configuracoes=configuracoes,
-        monitoramento=monitoramento,
-    )
+    worker = FlightMonitorWorker(configuracoes=configuracoes, 
+                                 monitoramento=monitoramento)
 
     try:
         await worker.start()
