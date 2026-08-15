@@ -2,9 +2,8 @@
 Description=Verifica atualizacoes do Rayquaza
 
 [Timer]
-OnBootSec=2min
-OnUnitActiveSec=5min
-Persistent=true
+OnActiveSec=1min
+OnUnitInactiveSec=5min
 Unit=rayquaza-deploy.service
 
 [Install]
