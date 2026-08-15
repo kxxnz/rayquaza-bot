@@ -22,12 +22,7 @@ class EventosMembros(commands.Cog):
                 f"{membro.mention}!"
             )
         except discord.Forbidden:
-            logger.warning(
-                "Nao foi possivel enviar mensagem privada "
-                "| usuario=%s | usuario_id=%s",
-                membro,
-                membro.id,
-            )
+            logger.warning("Nao foi possivel enviar mensagem privada | usuario=%s | usuario_id=%s", membro, membro.id,)
 
 
 async def setup(bot: commands.Bot) -> None:

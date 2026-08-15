@@ -59,22 +59,17 @@ def obter_float(nome: str) -> float:
 
 
 def carregar_configuracoes() -> ConfiguracoesMonitoramento:
-    return ConfiguracoesMonitoramento(
-        serpapi_key=obter_variavel("SERPAPI_KEY"),
-        rayquaza_api_url=obter_variavel("RAYQUAZA_API_URL"),
-        aeroporto_origem=obter_variavel("VOO_AEROPORTO_ORIGEM"),
-        aeroporto_destino=obter_variavel("VOO_AEROPORTO_DESTINO"),
-        data_ida=obter_variavel("VOO_DATA_IDA"),
-        data_volta=os.getenv("VOO_DATA_VOLTA"),
-        preco_maximo=obter_float("VOO_PRECO_MAXIMO"),
-        moeda=obter_variavel("VOO_MOEDA"),
-        intervalo_minutos=obter_inteiro("VOO_INTERVALO_MINUTOS", 15),
-        max_retries=obter_inteiro("VOO_MAX_RETRIES", 3),
-        timeout_ciclo_segundos=obter_inteiro(
-            "VOO_TIMEOUT_CICLO_SEGUNDOS",
-            300,
-        ),
-    )
+    return ConfiguracoesMonitoramento(serpapi_key=obter_variavel("SERPAPI_KEY"),
+                                      rayquaza_api_url=obter_variavel("RAYQUAZA_API_URL"),
+                                      aeroporto_origem=obter_variavel("VOO_AEROPORTO_ORIGEM"),
+                                      aeroporto_destino=obter_variavel("VOO_AEROPORTO_DESTINO"),
+                                      data_ida=obter_variavel("VOO_DATA_IDA"),
+                                      data_volta=os.getenv("VOO_DATA_VOLTA"),
+                                      preco_maximo=obter_float("VOO_PRECO_MAXIMO"),
+                                      moeda=obter_variavel("VOO_MOEDA"),
+                                      intervalo_minutos=obter_inteiro("VOO_INTERVALO_MINUTOS", 15),
+                                      max_retries=obter_inteiro("VOO_MAX_RETRIES", 3),
+                                      timeout_ciclo_segundos=obter_inteiro("VOO_TIMEOUT_CICLO_SEGUNDOS", 300,))
 
 
 configuracoes = carregar_configuracoes()

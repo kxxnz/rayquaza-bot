@@ -9,12 +9,10 @@ class RayquazaBot(commands.Bot):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         
-        self.servidor_api = RayquazaAPI(
-            bot=self,
-            host=configuracoes.api_host,
-            port=configuracoes.api_port,
-            notification_channel_id=configuracoes.notification_channel_id,
-        )
+        self.servidor_api = RayquazaAPI(bot=self,
+                                        host=configuracoes.api_host,
+                                        port=configuracoes.api_port,
+                                        notification_channel_id=configuracoes.notification_channel_id)
     
     async def setup_hook(self) -> None:
         # carregar as extensões do bot
@@ -36,8 +34,6 @@ def criar_bot() -> RayquazaBot:
     intents = discord.Intents.all()
     intents.message_content = True
     
-    return RayquazaBot(
-        command_prefix=configuracoes.command_prefix,
-        intents=intents,
-        help_command=None
-    )
+    return RayquazaBot(command_prefix=configuracoes.command_prefix,
+                       intents=intents,
+                       help_command=None)

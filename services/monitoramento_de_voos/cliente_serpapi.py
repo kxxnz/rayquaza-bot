@@ -122,28 +122,17 @@ class ClienteSerpApi:
         
         link = self._montar_link_google_flights()
 
-        return OfertaVoo(
-            origem=partida.get(
-                "id",
-                self.configuracoes.aeroporto_origem,
-            ),
-            destino=chegada.get(
-                "id",
-                self.configuracoes.aeroporto_destino,
-            ),
-            horario_saida=partida.get("time", "não informado"),
-            horario_chegada=chegada.get("time", "não informado"),
-            companhia=primeiro_trecho.get("airline", "não informado"),
-            numero_voo=primeiro_trecho.get(
-                "flight_number",
-                "não informado",
-            ),
-            preco=float(preco),
-            moeda=self.configuracoes.moeda,
-            duracao_minutos=resultado.get("total_duration", 0),
-            quantidade_escalas=len(trechos) - 1,
-            link=link,
-        )
+        return OfertaVoo(origem=partida.get("id", self.configuracoes.aeroporto_origem),
+                         destino=chegada.get("id", self.configuracoes.aeroporto_destino),
+                         horario_saida=partida.get("time", "não informado"),
+                         horario_chegada=chegada.get("time", "não informado"),
+                         companhia=primeiro_trecho.get("airline", "não informado"),
+                         numero_voo=primeiro_trecho.get("flight_number", "não informado"),
+                         preco=float(preco),
+                         moeda=self.configuracoes.moeda,
+                         duracao_minutos=resultado.get("total_duration", 0),
+                         quantidade_escalas=len(trechos) - 1,
+                         link=link)
         
     def _montar_link_google_flights(self) -> str:
         origem = self.configuracoes.aeroporto_origem
