@@ -4,22 +4,30 @@ set -eu
 
 DIRETORIO_PROJETO="/opt/rayquaza-bot"
 
-printf '%s
-'     ""     "===================================="     "Iniciando deploy do Rayquaza"     "===================================="
+printf '%s\n' \
+    "" \
+    "====================================" \
+    "Iniciando deploy do Rayquaza" \
+    "===================================="
 
 cd "$DIRETORIO_PROJETO"
 
-printf '%s
-' "Baixando imagens atualizadas..."
-docker compose pull
+if ! docker network inspect homelab-network >/dev/null 2>&1; then
+    printf '%s\n' "Criando rede compartilhada do homelab..."
+    docker network create homelab-network
+fi
 
-printf '%s
-' "Atualizando containers..."
-docker compose up -d --remove-orphans
+printf '%s\n' "Baixando imagens atualizadas..."
+docker-compose pull
 
-printf '%s
-' "Validando containers..."
-docker compose ps
+printf '%s\n' "Atualizando containers..."
+docker-compose up -d --remove-orphans
 
-printf '%s
-'     ""     "===================================="     "Deploy do Rayquaza finalizado"     "===================================="
+printf '%s\n' "Validando containers..."
+docker-compose ps
+
+printf '%s\n' \
+    "" \
+    "====================================" \
+    "Deploy do Rayquaza finalizado" \
+    "===================================="
