@@ -22,7 +22,7 @@ services:
       retries: 3
       start_period: 20s
     networks:
-      - rayquaza-network
+      - homelab-network
   monitoramento-de-voos:
     image: jpwrlld/rayquaza-bot:${IMAGE_TAG:-latest}
     container_name: monitoramento-de-voos
@@ -37,7 +37,8 @@ services:
       rayquaza-bot:
         condition: service_healthy
     networks:
-      - rayquaza-network
+      - homelab-network
 networks:
-  rayquaza-network:
-    name: rayquaza-network
+  homelab-network:
+    external: true
+    name: homelab-network
