@@ -15,12 +15,15 @@ class RayquazaAPI:
         self.api_token = api_token
         self.runner: web.AppRunner | None = None
         self.site: web.TCPSite | None = None
-    async def start(self) -> None:
+    def criar_aplicacao(self) -> web.Application:
         app = web.Application(middlewares=[criar_middleware_autenticacao(self.api_token)])
         app.router.add_get("/health", self.verificar_saude)
         app.router.add_get("/ready", self.verificar_prontidao)
         app.router.add_post("/notificacoes/teste", self.enviar_noticacao_de_teste)
         app.router.add_post("/notificacoes/promocoes-de-voo", self.enviar_promocao_de_voo)
+        return app
+    async def start(self) -> None:
+        app = self.criar_aplicacao()
         self.runner = web.AppRunner(app)
         await self.runner.setup()
         self.site = web.TCPSite(self.runner, self.host, self.port)
