@@ -13,10 +13,12 @@ logger = logging.getLogger(__name__)
 class NotificadorRayquaza:
     def __init__(self, configuracoes: ConfiguracoesMonitoramento) -> None:
         self.api_url = configuracoes.rayquaza_api_url.rstrip("/")
+        self.api_token = configuracoes.api_token
         self.max_retries = configuracoes.max_retries
 
     async def enviar_oferta(self, oferta: OfertaVoo) -> None:
         url = f"{self.api_url}/notificacoes/promocoes-de-voo"
+        headers = {"Authorization": f"Bearer {self.api_token}"}
 
         dados_oferta = {
             "origem": oferta.origem,
@@ -37,16 +39,14 @@ class NotificadorRayquaza:
                 timeout = aiohttp.ClientTimeout(total=15)
 
                 async with aiohttp.ClientSession(timeout=timeout) as sessao:
-                    async with sessao.post(url,json=dados_oferta) as resposta:
+                    async with sessao.post(url, headers=headers, json=dados_oferta) as resposta:
                         dados = await resposta.json()
 
                         if resposta.status != 200:
                             erro = dados.get("erro", "erro desconhecido")
-
                             raise RuntimeError(f"Erro ao notificar o Rayquaza: {erro}")
 
                 logger.info("Notificação enviada | rota=%s-%s", oferta.origem, oferta.destino)
-
                 return
 
             except (asyncio.TimeoutError, aiohttp.ClientError) as erro:
@@ -56,6 +56,6 @@ class NotificadorRayquaza:
 
                 espera = 2 ** tentativa
 
-                logger.warning("Erro ao notificar Rayquaza | tentativa=%d | aguardando=%ds | erro=%s", tentativa + 1, espera, type(erro).__name__,)
+                logger.warning("Erro ao notificar Rayquaza | tentativa=%d | aguardando=%ds | erro=%s", tentativa + 1, espera, type(erro).__name__)
 
                 await asyncio.sleep(espera)
