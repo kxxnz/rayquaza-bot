@@ -11,6 +11,7 @@ load_dotenv()
 class ConfiguracoesMonitoramento:
     serpapi_key: str
     rayquaza_api_url: str
+    api_token: str
     aeroporto_origem: str
     aeroporto_destino: str
     data_ida: str
@@ -61,6 +62,7 @@ def obter_float(nome: str) -> float:
 def carregar_configuracoes() -> ConfiguracoesMonitoramento:
     return ConfiguracoesMonitoramento(serpapi_key=obter_variavel("SERPAPI_KEY"),
                                       rayquaza_api_url=obter_variavel("RAYQUAZA_API_URL"),
+                                      api_token=obter_variavel("API_TOKEN"),
                                       aeroporto_origem=obter_variavel("VOO_AEROPORTO_ORIGEM"),
                                       aeroporto_destino=obter_variavel("VOO_AEROPORTO_DESTINO"),
                                       data_ida=obter_variavel("VOO_DATA_IDA"),
@@ -69,7 +71,7 @@ def carregar_configuracoes() -> ConfiguracoesMonitoramento:
                                       moeda=obter_variavel("VOO_MOEDA"),
                                       intervalo_minutos=obter_inteiro("VOO_INTERVALO_MINUTOS", 15),
                                       max_retries=obter_inteiro("VOO_MAX_RETRIES", 3),
-                                      timeout_ciclo_segundos=obter_inteiro("VOO_TIMEOUT_CICLO_SEGUNDOS", 300,))
+                                      timeout_ciclo_segundos=obter_inteiro("VOO_TIMEOUT_CICLO_SEGUNDOS", 300))
 
 
 configuracoes = carregar_configuracoes()
